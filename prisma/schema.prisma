@@ -1,0 +1,195 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum GoalStatus {
+  IN_PROGRESS
+  ACHIEVED
+  PAUSED
+}
+
+enum AlertType {
+  OVERSPENDING
+  LARGE_TRANSACTION
+  UPCOMING_EMI
+  SUBSCRIPTION_RENEWAL
+  LOW_CASH_BUFFER
+}
+
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  name            String
+  passwordHash    String?
+  avatar          String?
+  healthScore     Int              @default(78)
+  monthlyIncome   Float            @default(85000)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  accounts        Account[]
+  incomes         Income[]
+  transactions    Transaction[]
+  liabilities     Liability[]
+  subscriptions   Subscription[]
+  goals           Goal[]
+  alerts          Alert[]
+  recommendations Recommendation[]
+  simulations     Simulation[]
+}
+
+model Account {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  type          String        // CHECKING, SAVINGS, CREDIT_CARD, INVESTMENT
+  balance       Float         @default(0)
+  accountNumber String?
+  institution   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  transactions  Transaction[]
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  icon         String?
+  color        String?
+  isEssential  Boolean       @default(false)
+
+  transactions Transaction[]
+}
+
+model Income {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source      String
+  amount      Float
+  frequency   String   // MONTHLY, WEEKLY, ONE_TIME
+  nextPayDate DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId   String?
+  account     Account?        @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  categoryId  String?
+  category    Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  date        DateTime
+  merchant    String
+  description String?
+  type        TransactionType
+  amount      Float
+  isRecurring Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model Liability {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String   // Home Loan, Credit Card, Personal Loan
+  outstanding    Float
+  interestRate   Float
+  emi            Float
+  minimumDue     Float?
+  dueDate        DateTime?
+  priorityScore  Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Subscription {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String   // Netflix, Spotify, YouTube Premium
+  amount         Float
+  billingCycle   String   // MONTHLY, YEARLY
+  nextBilling    DateTime
+  category       String?
+  isUnused       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Goal {
+  id                  String     @id @default(uuid())
+  userId              String
+  user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title               String     // Emergency Fund, Vacation, Laptop
+  targetAmount        Float
+  currentAmount       Float      @default(0)
+  monthlyContribution Float      @default(0)
+  targetDate          DateTime
+  status              GoalStatus @default(IN_PROGRESS)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+}
+
+model Alert {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      AlertType
+  priority  Priority  @default(MEDIUM)
+  isRead    Boolean   @default(false)
+  createdAt DateTime  @default(now())
+}
+
+model Recommendation {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  impact      String   // High Savings, Debt Reduction, Risk Mitigation
+  potentialAmount Float?
+  isDismissed Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Simulation {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title            String
+  scenarioType     String   // RENT_INCREASE, SALARY_CHANGE, NEW_EMI, CAR_PURCHASE
+  inputsJson       String   // Raw parameters
+  projectedSurplus Float
+  goalDelayMonths  Int
+  createdAt        DateTime @default(now())
+}
