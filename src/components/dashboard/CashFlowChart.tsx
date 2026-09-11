@@ -11,13 +11,19 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  Legend,
 } from "recharts";
 import { MOCK_CASH_FLOW } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
 import { TrendingUp } from "lucide-react";
+import { CashFlowPoint } from "@/types";
 
-export function CashFlowChart() {
+interface CashFlowChartProps {
+  data?: CashFlowPoint[];
+}
+
+export function CashFlowChart({ data = MOCK_CASH_FLOW }: CashFlowChartProps) {
+  const chartData = data && data.length > 0 ? data : MOCK_CASH_FLOW;
+
   return (
     <Card variant="glass" className="space-y-4">
       <CardHeader>
@@ -31,16 +37,16 @@ export function CashFlowChart() {
           </CardDescription>
         </div>
         <div className="flex items-center gap-3 text-xs">
-          <div className="flex items-center gap-1.5 text-slate-300">
+          <div className="flex items-center gap-1.5 text-[var(--text-secondary)]">
             <span className="w-3 h-3 rounded-full bg-purple-500 inline-block" />
             Income
           </div>
-          <div className="flex items-center gap-1.5 text-slate-300">
+          <div className="flex items-center gap-1.5 text-[var(--text-secondary)]">
             <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
             Expenses
           </div>
-          <div className="flex items-center gap-1.5 text-slate-300">
-            <span className="w-3 h-3 rounded bg-emerald-400 inline-block" />
+          <div className="flex items-center gap-1.5 text-[var(--text-secondary)]">
+            <span className="w-3 h-3 rounded bg-emerald-500 inline-block" />
             Projected Balance
           </div>
         </div>
@@ -48,7 +54,7 @@ export function CashFlowChart() {
 
       <div className="h-72 w-full pt-2">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={MOCK_CASH_FLOW} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+          <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <defs>
               <linearGradient id="incomeGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
@@ -60,16 +66,16 @@ export function CashFlowChart() {
               </linearGradient>
             </defs>
 
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.15)" vertical={false} />
             <XAxis
               dataKey="month"
-              stroke="#64748b"
+              stroke="#94a3b8"
               fontSize={12}
               tickLine={false}
               axisLine={{ stroke: "rgba(139, 92, 246, 0.2)" }}
             />
             <YAxis
-              stroke="#64748b"
+              stroke="#94a3b8"
               fontSize={11}
               tickLine={false}
               axisLine={false}
@@ -79,15 +85,15 @@ export function CashFlowChart() {
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length) {
                   return (
-                    <div className="glass-panel p-3 rounded-xl shadow-xl border border-purple-500/30 text-xs space-y-1.5">
-                      <p className="font-bold text-white border-b border-purple-900/40 pb-1">{label}</p>
-                      <p className="text-purple-300">
+                    <div className="glass-panel p-3 rounded-xl shadow-xl border border-[var(--border-subtle)] text-xs space-y-1.5 bg-[var(--bg-surface)]">
+                      <p className="font-bold text-[var(--text-primary)] border-b border-[var(--border-subtle)] pb-1">{label}</p>
+                      <p className="text-purple-500 font-medium">
                         Income: <span className="font-semibold">{formatCurrency(payload[0]?.value as number)}</span>
                       </p>
-                      <p className="text-rose-400">
+                      <p className="text-rose-500 font-medium">
                         Expenses: <span className="font-semibold">{formatCurrency(payload[1]?.value as number)}</span>
                       </p>
-                      <p className="text-emerald-400 font-semibold pt-1 border-t border-purple-900/40">
+                      <p className="text-emerald-500 font-semibold pt-1 border-t border-[var(--border-subtle)]">
                         Cumul. Balance: {formatCurrency(payload[2]?.value as number)}
                       </p>
                     </div>

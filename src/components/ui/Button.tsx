@@ -17,11 +17,11 @@ export function Button({
   ...props
 }: ButtonProps) {
   const variantStyles = {
-    primary: "gradient-purple-btn text-white font-medium",
-    secondary: "bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 border border-purple-500/30",
-    outline: "bg-transparent border border-purple-500/30 text-purple-200 hover:bg-purple-950/40",
-    ghost: "bg-transparent text-slate-300 hover:text-white hover:bg-purple-950/30",
-    danger: "bg-rose-900/80 hover:bg-rose-800 text-rose-100 border border-rose-500/40",
+    primary: "gradient-purple-btn text-white font-medium shadow-sm",
+    secondary: "dark:bg-purple-950/60 dark:hover:bg-purple-900/60 dark:text-purple-200 dark:border-purple-500/30 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 shadow-sm",
+    outline: "dark:bg-transparent dark:border-purple-500/30 dark:text-purple-200 dark:hover:bg-purple-950/40 bg-white border border-purple-300 text-purple-700 hover:bg-purple-50 shadow-sm",
+    ghost: "dark:bg-transparent dark:text-slate-300 dark:hover:text-white dark:hover:bg-purple-950/30 bg-transparent text-slate-700 hover:text-purple-700 hover:bg-purple-50",
+    danger: "dark:bg-rose-900/80 dark:hover:bg-rose-800 dark:text-rose-100 dark:border-rose-500/40 bg-rose-600 hover:bg-rose-700 text-white border border-rose-600 shadow-sm",
   };
 
   const sizeStyles = {

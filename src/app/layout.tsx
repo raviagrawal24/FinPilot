@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { AppProvider } from "@/context/AppContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,9 +16,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} bg-[#06040a] text-slate-100 antialiased min-h-screen`}>
-        {children}
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var savedTheme = localStorage.getItem('finpilot_theme');
+                  if (savedTheme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  } else {
+                    document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className={`${inter.className} antialiased min-h-screen transition-colors duration-200`}>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );

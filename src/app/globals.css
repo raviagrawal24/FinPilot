@@ -1,19 +1,52 @@
 @import "tailwindcss";
 
 @layer base {
-  :root {
+  :root, html.dark {
+    --background: #06040a;
+    --foreground: #f8fafc;
     --bg-canvas: #06040a;
     --bg-surface: #120a21;
     --bg-surface-hover: #1b1030;
     --bg-card: rgba(18, 10, 33, 0.75);
+    --card: rgba(18, 10, 33, 0.75);
+    --card-foreground: #f8fafc;
     --border-subtle: rgba(139, 92, 246, 0.18);
     --border-hover: rgba(168, 85, 247, 0.4);
+    --border: rgba(139, 92, 246, 0.18);
     --accent-violet: #8b5cf6;
     --accent-electric: #a855f7;
     --accent-glow: rgba(139, 92, 246, 0.25);
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
+    --muted: #1b1030;
+    --muted-foreground: #64748b;
+    --primary: #8b5cf6;
+    --primary-foreground: #ffffff;
+  }
+
+  html.light {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --bg-canvas: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-surface-hover: #f1f5f9;
+    --bg-card: #ffffff;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --border-subtle: #e2e8f0;
+    --border-hover: #c084fc;
+    --border: #e2e8f0;
+    --accent-violet: #7c3aed;
+    --accent-electric: #9333ea;
+    --accent-glow: rgba(124, 58, 237, 0.12);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --primary: #7c3aed;
+    --primary-foreground: #ffffff;
   }
 
   body {
@@ -22,6 +55,7 @@
     font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: hidden;
     min-height: 100vh;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
@@ -32,7 +66,11 @@
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
   border-radius: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+html.light .glass-card {
+  box-shadow: 0 4px 20px -2px rgba(124, 58, 237, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
 }
 
 .glass-card:hover {
@@ -41,9 +79,19 @@
 }
 
 .glass-panel {
-  background: rgba(15, 8, 28, 0.85);
+  background: var(--bg-surface);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid var(--border-subtle);
+}
+
+html.light .glass-panel {
+  box-shadow: 0 4px 20px -2px rgba(124, 58, 237, 0.05);
+}
+
+html.light .gradient-text {
+  background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #9333ea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .gradient-text {
@@ -69,18 +117,23 @@
   background-size: 24px 24px;
 }
 
+html.light .subtle-grid-bg {
+  background-image: radial-gradient(rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #06040a;
+  background: var(--bg-canvas);
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a1b4d;
+  background: var(--border-hover);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4c288f;
+  background: var(--primary);
 }

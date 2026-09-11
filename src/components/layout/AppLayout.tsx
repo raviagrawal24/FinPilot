@@ -11,7 +11,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#06040a] text-slate-100 flex flex-col md:flex-row subtle-grid-bg">
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col md:flex-row subtle-grid-bg transition-colors duration-200">
       {/* Sidebar */}
       <Sidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
 

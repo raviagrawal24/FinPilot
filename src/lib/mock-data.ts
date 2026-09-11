@@ -14,8 +14,8 @@ import {
 
 export const MOCK_USER: UserProfile = {
   id: "user-1",
-  name: "Alex Morgan",
-  email: "alex.morgan@finpilot.ai",
+  name: "Ravi Agrawal",
+  email: "ravi.agrawal@finpilot.ai",
   avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
   healthScore: 78,
 };

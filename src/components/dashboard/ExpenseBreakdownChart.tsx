@@ -5,10 +5,20 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Ca
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { MOCK_EXPENSE_CATEGORIES } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
+import { ExpenseCategoryItem } from "@/types";
 import { PieChart as PieIcon } from "lucide-react";
 
-export function ExpenseBreakdownChart() {
-  const totalExpense = MOCK_EXPENSE_CATEGORIES.reduce((acc, c) => acc + c.amount, 0);
+interface ExpenseBreakdownChartProps {
+  categories?: ExpenseCategoryItem[];
+}
+
+export function ExpenseBreakdownChart({ categories = MOCK_EXPENSE_CATEGORIES }: ExpenseBreakdownChartProps) {
+  const dataList = categories && categories.length > 0 ? categories : MOCK_EXPENSE_CATEGORIES;
+  const totalExpense = dataList.reduce((acc, c) => acc + c.amount, 0);
+
+  // Top category determination
+  const sorted = [...dataList].sort((a, b) => b.amount - a.amount);
+  const topCategory = sorted[0] || { name: "Housing", percentage: 40.5 };
 
   return (
     <Card variant="glass" className="space-y-4">
@@ -31,7 +41,7 @@ export function ExpenseBreakdownChart() {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={MOCK_EXPENSE_CATEGORIES}
+                data={dataList}
                 cx="50%"
                 cy="50%"
                 innerRadius={55}
@@ -39,8 +49,8 @@ export function ExpenseBreakdownChart() {
                 paddingAngle={4}
                 dataKey="amount"
               >
-                {MOCK_EXPENSE_CATEGORIES.map((cat, index) => (
-                  <Cell key={`cell-${index}`} fill={cat.color} stroke="#090514" strokeWidth={2} />
+                {dataList.map((cat, index) => (
+                  <Cell key={`cell-${index}`} fill={cat.color || "#8b5cf6"} stroke="#090514" strokeWidth={2} />
                 ))}
               </Pie>
               <Tooltip
@@ -61,21 +71,21 @@ export function ExpenseBreakdownChart() {
             </PieChart>
           </ResponsiveContainer>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
             <span className="text-xs text-slate-400">Top Category</span>
-            <span className="text-sm font-bold text-white">Housing (40.5%)</span>
+            <span className="text-sm font-bold text-white">{topCategory.name} ({topCategory.percentage}%)</span>
           </div>
         </div>
 
         {/* Category List Details */}
         <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-          {MOCK_EXPENSE_CATEGORIES.map((cat) => (
+          {dataList.map((cat) => (
             <div
               key={cat.name}
               className="flex items-center justify-between p-2 rounded-xl bg-purple-950/20 border border-purple-900/20 text-xs hover:border-purple-500/30 transition-colors"
             >
               <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color || "#8b5cf6" }} />
                 <span className="font-medium text-slate-200">{cat.name}</span>
               </div>
               <div className="text-right">

@@ -13,8 +13,8 @@ export function Card({ children, className, variant = "glass", ...props }: CardP
       className={cn(
         "p-6 transition-all duration-200",
         variant === "glass" && "glass-card",
-        variant === "solid" && "bg-[#120a21] border border-purple-900/30 rounded-2xl",
-        variant === "bordered" && "bg-[#0c0717] border border-purple-500/20 rounded-2xl",
+        variant === "solid" && "bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-2xl shadow-sm",
+        variant === "bordered" && "bg-[var(--bg-canvas)] border border-[var(--border-subtle)] rounded-2xl",
         className
       )}
       {...props}
@@ -29,9 +29,9 @@ export function CardHeader({ children, className }: { children: React.ReactNode;
 }
 
 export function CardTitle({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <h3 className={cn("text-lg font-semibold text-white tracking-tight", className)}>{children}</h3>;
+  return <h3 className={cn("text-lg font-semibold text-[var(--text-primary)] tracking-tight", className)}>{children}</h3>;
 }
 
 export function CardDescription({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <p className={cn("text-sm text-slate-400 mt-1", className)}>{children}</p>;
+  return <p className={cn("text-sm text-[var(--text-secondary)] mt-1", className)}>{children}</p>;
 }
